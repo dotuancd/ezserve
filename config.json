@@ -1,0 +1,20 @@
+{
+  "app": {
+    "storage": "storage"
+  },
+  "database": {
+    "host": "localhost",
+    "port": 3306,
+    "database": "ezserve",
+    "user": "root",
+    "password": ""
+  },
+  "files": {
+    "driver": "local",
+    "connections": {
+      "local": {
+        "root": "storage"
+      }
+    }
+  }
+}
