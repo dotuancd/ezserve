@@ -11,3 +11,5 @@ type App struct {
 	Config *viper.Viper
 	Routes *gin.Engine
 }
+
+var DefaultApp = &App{}

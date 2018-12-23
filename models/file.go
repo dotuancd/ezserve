@@ -1,26 +1,52 @@
 package models
 
 import (
-	//"path"
+	"bitbucket.org/ezserve/ezserve/supports"
+	"github.com/spf13/viper"
 	"time"
 )
 
-const FileIdLength = 30
+const FileIdLength = 12
+
+const (
+	FileVisibilityPublic = "public"
+	FileVisibilityProtected = "protected"
+	FileVisibilityPrivate = "private"
+)
 
 type File struct {
-	ID string `gorm:"primary_key;size:30";json:"id"`
+	ID string `json:"id" gorm:"primary_key;size:30"`
 	ContentType string `json:"content_type"`
-	//Content []byte `gorm:"type:mediumblob";json:"content"`
-	Path string `json:"path";gorm:"size:255"`
+	Path string `json:"path"`
+	Name string `json:"name"`
 	Secret string `json:"secret"`
-	UserID uint `sql:"index";json:"user_id";gorm:"column:user_id"`
-	IsPrivate bool `json:"is_private"`
+	UserID uint `json:"user_id" sql:"index"`
+	Visibility string `json:"visibility" gorm:"default:public;size:20"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
-	DeletedAt *time.Time `sql:"index";json:"deleted_at"`
+	DeletedAt *time.Time `json:"deleted_at" sql:"index"`
+	PublicURL string `json:"public_url" gorm:"-"`
 }
 
-func (file *File) GetPath() string {
-	//return path.Join("storage", file.Path)
-	return ""
+func (file *File) AfterFind() error {
+	return file.appendPublicURL()
+}
+
+func (file *File) AfterSave() error {
+	return file.appendPublicURL()
+}
+
+func (file *File) appendPublicURL() error {
+	replacements := map[string]interface{}{
+		"host": viper.GetString("app.host"),
+		"file_id": file.ID,
+		"filename": file.Name,
+	}
+
+	file.PublicURL = supports.Replace(
+		":host/files/:file_id/:filename",
+		replacements,
+	)
+
+	return nil
 }

@@ -27,7 +27,7 @@ func initRoutes(a *App) {
 }
 
 func initConfig(a *App) *App {
-	v := viper.New()
+	v := viper.GetViper()
 	v.SetConfigType("json")
 	v.SetConfigName("config")
 	v.AddConfigPath(".")
@@ -49,6 +49,7 @@ func initDatabase(a *App) *App {
 	c.DBName = dbConf["database"]
 	c.Passwd = dbConf["password"]
 	c.User = dbConf["user"]
+	c.ParseTime = true
 
 	dsn := c.FormatDSN()
 	db, err := gorm.Open("mysql", dsn)

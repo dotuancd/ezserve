@@ -1,13 +1,8 @@
 package res
 
-import "github.com/gin-gonic/gin"
-
-const (
-	HttpBadRequest = 400
-	HttpUnauthorized = 401
-	HttpForbidden = 403
-	HttpNotFound = 404
-	HttpInternalError = 500
+import (
+	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 type Error struct {
@@ -35,6 +30,11 @@ func (s *Success) Content() gin.H {
 	return s.content
 }
 
+func (s *Success) Extra(key string, value interface{}) *Success {
+	s.content[key] = value
+	return s
+}
+
 func (s *Success) Status (status int) *Success {
 	s.statusCode = status
 	return s
@@ -49,30 +49,37 @@ func NotFound(c *gin.Context) *Error {
 	return NewError(c).
 		Code("resource_not_found").
 		Message("Resource not found").
-		Status(HttpNotFound)
+		Status(http.StatusNotFound)
 }
 
 func Unauthorized(c *gin.Context) *Error {
 	return NewError(c).
 		Code("cannot_authorized").
 		Message("Cannot authorized").
-		Status(HttpUnauthorized)
+		Status(http.StatusUnauthorized)
 }
 
 func Forbidden(c *gin.Context) *Error {
 	return NewError(c).
 		Code("permission_required").
 		Message("You haven't permission to perform the action").
-		Status(HttpForbidden)
+		Status(http.StatusForbidden)
 }
 
 func NewError(c *gin.Context) *Error {
-	return &Error{Context: c, Content: map[string]interface{}{"ok": false}, StatusCode: HttpInternalError}
+	return &Error{Context: c, Content: map[string]interface{}{"ok": false}, StatusCode: http.StatusInternalServerError}
 }
 
 func SendError(c *gin.Context, status int, code string, message string) {
 	NewError(c).
 		Status(status).
+		Code(code).
+		Message(message).
+		Send()
+}
+
+func SendInternalError(c *gin.Context, code string, message string) {
+	NewError(c).
 		Code(code).
 		Message(message).
 		Send()
@@ -94,25 +101,5 @@ func (r *Error) Message(message string) *Error {
 }
 
 func (r *Error) Send() {
-	r.Context.JSON(r.StatusCode, r.Content)
-	r.Context.Abort()
+	r.Context.AbortWithStatusJSON(r.StatusCode, r.Content)
 }
-
-//
-//func Error(c *gin.Context, status int, code string, message string)  {
-//	c.JSON(status, gin.H{
-//		"ok": false,
-//		"code": code,
-//		"error": message,
-//	})
-//	c.Abort()
-//}
-
-//func NewError(c *gin.Context, code string, message string) {
-//	//c.JSON(404, gin.H{
-//	//	"ok": false,
-//	//	"code": code,
-//	//	"error": message,
-//	//})
-//	//c.Abort()
-//}

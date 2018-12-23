@@ -16,5 +16,5 @@ func registerFileRoutes(a *app.App) {
 	authRoutes.GET("/api/files", files.Index())
 	authRoutes.POST("/api/files", files.Store())
 
-	a.Routes.GET("/files/:file_id", files.Show())
+	a.Routes.GET("/files/:file_id/:filename", files.Show())
 }
