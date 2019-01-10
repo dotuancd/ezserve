@@ -1,9 +1,9 @@
 package main
 
 import (
-	"bitbucket.org/ezserve/ezserve/app"
-	"bitbucket.org/ezserve/ezserve/controllers"
-	"bitbucket.org/ezserve/ezserve/middlewares"
+	"github.com/dotuancd/ezserve/app"
+	"github.com/dotuancd/ezserve/controllers"
+	"github.com/dotuancd/ezserve/middlewares"
 )
 
 func registerFileRoutes(a *app.App) {

@@ -1,10 +1,10 @@
 package controllers
 
 import (
-	"bitbucket.org/ezserve/ezserve/app"
-	"bitbucket.org/ezserve/ezserve/http/res"
-	"bitbucket.org/ezserve/ezserve/models"
-	"bitbucket.org/ezserve/ezserve/supports"
+	"github.com/dotuancd/ezserve/app"
+	"github.com/dotuancd/ezserve/http/res"
+	"github.com/dotuancd/ezserve/models"
+	"github.com/dotuancd/ezserve/supports"
 	"crypto/sha1"
 	"fmt"
 	"github.com/gin-gonic/gin"

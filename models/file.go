@@ -1,7 +1,7 @@
 package models
 
 import (
-	"bitbucket.org/ezserve/ezserve/supports"
+	"github.com/dotuancd/ezserve/supports"
 	"github.com/spf13/viper"
 	"time"
 )

@@ -1,7 +1,7 @@
 package main
 
 import (
-	. "bitbucket.org/ezserve/ezserve/app"
+	. "github.com/dotuancd/ezserve/app"
 	//"database/sql"
 	"fmt"
 	//"time"

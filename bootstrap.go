@@ -1,8 +1,8 @@
 package main
 
 import (
-	. "bitbucket.org/ezserve/ezserve/app"
-	"bitbucket.org/ezserve/ezserve/models"
+	. "github.com/dotuancd/ezserve/app"
+	"github.com/dotuancd/ezserve/models"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/go-sql-driver/mysql"

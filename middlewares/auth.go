@@ -1,11 +1,11 @@
 package middlewares
 
 import (
-	"bitbucket.org/ezserve/ezserve/http/res"
+	"github.com/dotuancd/ezserve/http/res"
 	"github.com/gin-gonic/gin"
 )
-import "bitbucket.org/ezserve/ezserve/app"
-import m "bitbucket.org/ezserve/ezserve/models"
+import "github.com/dotuancd/ezserve/app"
+import m "github.com/dotuancd/ezserve/models"
 
 func UserAuth(a *app.App) gin.HandlerFunc {
 	return func(c *gin.Context) {
