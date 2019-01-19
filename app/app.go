@@ -12,4 +12,8 @@ type App struct {
 	Routes *gin.Engine
 }
 
-var DefaultApp = &App{}
+var defaultApp = &App{}
+
+func DefaultApp() *App {
+	return defaultApp
+}

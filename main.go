@@ -8,12 +8,12 @@ import (
 )
 
 func main() {
-	a := DefaultApp
+	a := DefaultApp()
 
 	bootApp(a)
 	defer shutdown(a)
 
-	registerFileRoutes(a)
+	//registerRoutes(a)
 
 	err := a.Routes.Run(":8000")
 	//err := http.ListenAndServe(":8000", a.Routes)

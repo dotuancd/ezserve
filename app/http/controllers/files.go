@@ -3,12 +3,12 @@ package controllers
 import (
 	"crypto/sha1"
 	"fmt"
-	"github.com/dotuancd/ezserve/http/errors"
+	"github.com/dotuancd/ezserve/app/http/errors"
 
 	"github.com/dotuancd/ezserve/app"
-	"github.com/dotuancd/ezserve/http/res"
-	"github.com/dotuancd/ezserve/models"
-	"github.com/dotuancd/ezserve/supports"
+	"github.com/dotuancd/ezserve/app/http/res"
+	"github.com/dotuancd/ezserve/app/models"
+	"github.com/dotuancd/ezserve/app/supports"
 
 	"github.com/gin-gonic/gin"
 

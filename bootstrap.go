@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	. "github.com/dotuancd/ezserve/app"
-	"github.com/dotuancd/ezserve/models"
+	"github.com/dotuancd/ezserve/app/models"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-sql-driver/mysql"
@@ -13,27 +13,19 @@ import (
 	"github.com/spf13/viper"
 )
 
-func NewApp() *App {
-	return &App{}
-}
-
 func bootApp(a *App) {
-	initConfig(a)
+	loadConfig(a)
 	initRoutes(a)
 	initDatabase(a)
 	migrateDatabase(a)
 	loadViews(a)
 }
 
-func initRoutes(a *App) {
-	a.Routes = gin.Default()
-}
-
-func initConfig(a *App) *App {
+func loadConfig(a *App) *App {
 	v := viper.GetViper()
 	v.SetConfigType("json")
 	v.SetConfigName("config")
-	v.AddConfigPath(".")
+	v.AddConfigPath("config")
 
 	err := v.ReadInConfig()
 
@@ -43,6 +35,11 @@ func initConfig(a *App) *App {
 
 	a.Config = v
 	return a
+}
+
+func initRoutes(a *App) {
+	a.Routes = gin.Default()
+	registerRoutes(a)
 }
 
 func initDatabase(a *App) *App {
