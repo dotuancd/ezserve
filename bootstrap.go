@@ -1,9 +1,11 @@
 package main
 
 import (
+	"fmt"
+
 	. "github.com/dotuancd/ezserve/app"
 	"github.com/dotuancd/ezserve/models"
-	"fmt"
+
 	"github.com/gin-gonic/gin"
 	"github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"

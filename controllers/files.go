@@ -1,18 +1,33 @@
 package controllers
 
 import (
+	"crypto/sha1"
+	"fmt"
+	"github.com/dotuancd/ezserve/http/errors"
+
 	"github.com/dotuancd/ezserve/app"
 	"github.com/dotuancd/ezserve/http/res"
 	"github.com/dotuancd/ezserve/models"
 	"github.com/dotuancd/ezserve/supports"
-	"crypto/sha1"
-	"fmt"
+
 	"github.com/gin-gonic/gin"
+
 	"mime"
 	"net/http"
 	"os"
 	"path"
 	"time"
+)
+
+var (
+	ErrFileNotFound = errors.New("file_not_found", "File not found", http.StatusNotFound)
+
+	ErrFileUploadIsInvalid = errors.New("cannot_read_uploaded_file", "An error occur while reading the upload file", http.StatusUnprocessableEntity)
+
+	ErrCannotCreateFolder = errors.New("cannot_make_dir", "An error occur while creating directories for uploaded file", http.StatusInternalServerError)
+
+	ErrCannotSaveFile = errors.New("cannot_save_uploaded_file", "An error occur while saving uploaded file", http.StatusInternalServerError)
+
 )
 
 type FileHandler struct {
@@ -21,8 +36,9 @@ type FileHandler struct {
 
 var root = "storage"
 
-func (h *FileHandler) Index() gin.HandlerFunc {
-	return func(c *gin.Context) {
+
+func (h *FileHandler) Index() errors.HandlerFunc {
+	return func(c *gin.Context) error {
 		var files []models.File
 		user := c.MustGet("user").(models.User)
 
@@ -34,27 +50,30 @@ func (h *FileHandler) Index() gin.HandlerFunc {
 			"ok": true,
 			"files": files,
 		})
+
+		return nil
 	}
 }
 
-func (h *FileHandler) Show() gin.HandlerFunc {
-	return func(c *gin.Context) {
+func (h *FileHandler) Show() errors.HandlerFunc {
+	return func(c *gin.Context) error {
 		id := c.Param("file_id")
 		file := models.File{}
 		h.App.DB.Find(&file, &models.File{ID: id})
 
 		if file.ID == "" {
-			fileNotFound(c)
-			return
+			return ErrFileNotFound
 		}
 
 		c.Writer.Header().Set("Content-Type", file.ContentType)
 		c.File(file.Path)
+
+		return nil
 	}
 }
 
-func (h *FileHandler) Store () gin.HandlerFunc {
-	return func(c *gin.Context) {
+func (h *FileHandler) Store () errors.HandlerFunc {
+	return func(c *gin.Context) error {
 
 		_, err := c.MultipartForm()
 		//isMultipartForm := err != nil
@@ -67,28 +86,21 @@ func (h *FileHandler) Store () gin.HandlerFunc {
 		}
 
 		if err != nil {
-			res.SendError(
-				c,
-				http.StatusBadRequest,
-				"invalid_file_upload",
-				"Cannot read the uploaded file",
-			)
-			return
+			return ErrFileUploadIsInvalid
 		}
 
 		dest := getStoragePath(fh.Filename)
 
 		if err = os.MkdirAll(path.Dir(dest), 0644); err != nil {
-			res.SendInternalError(c, "cannot_make_dir", "An error occur while creating directories for uploaded file")
-			return
+			return ErrCannotCreateFolder
 		}
 
 		err = c.SaveUploadedFile(fh, dest)
 
 		if err != nil {
 			fmt.Printf("An error occur while saving uploaded file %s", err.Error())
-			res.SendInternalError(c, "cannot_save_uploaded_file", "An error occur while saving uploaded file")
-			return
+
+			return ErrCannotSaveFile
 		}
 
 		file := &models.File{
@@ -111,6 +123,7 @@ func (h *FileHandler) Store () gin.HandlerFunc {
 
 		success.Send()
 
+		return nil
 	}
 }
 
@@ -124,13 +137,4 @@ func getStoragePath(filename string) string {
 
 func toUser(c *gin.Context) models.User {
 	return c.MustGet("user").(models.User)
-}
-
-func fileNotFound(c *gin.Context) {
-	res.
-		NotFound(c).
-		Code("file_not_found").
-		Message("File not found").
-		Send()
-	return
 }

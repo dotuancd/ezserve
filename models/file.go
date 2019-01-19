@@ -21,7 +21,7 @@ type File struct {
 	Name string `json:"name"`
 	Secret string `json:"secret"`
 	UserID uint `json:"user_id" sql:"index"`
-	Visibility string `json:"visibility" gorm:"default:public;size:20"`
+	Visibility string `json:"visibility" gorm:"default:'public';size:20"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 	DeletedAt *time.Time `json:"deleted_at" sql:"index"`

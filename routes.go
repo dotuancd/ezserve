@@ -5,12 +5,7 @@ import (
 	"github.com/dotuancd/ezserve/controllers"
 	"github.com/dotuancd/ezserve/http/errors"
 	"github.com/dotuancd/ezserve/middlewares"
-	"github.com/gin-gonic/gin"
 )
-
-func handlingErrorFunc(routes gin.IRoutes) {
-
-}
 
 func registerFileRoutes(a *app.App) {
 
@@ -18,19 +13,15 @@ func registerFileRoutes(a *app.App) {
 		App:a,
 	}
 
-	adater := errors.HandlerFuncAdapter{Next: home.Index()}
-
-	a.Routes.AppEngine
-
-	a.Routes.GET("/", adater.Handle())
+	a.Routes.GET("/", errors.Handler(home.Index))
 
 	files := &controllers.FileHandler{
 		App: a,
 	}
 
 	authRoutes := a.Routes.Group("/", middlewares.UserAuth(a))
-	authRoutes.GET("/api/files", files.Index())
-	authRoutes.POST("/api/files", files.Store())
+	authRoutes.GET("/api/files", errors.Handler(files.Index()))
+	authRoutes.POST("/api/files", errors.Handler(files.Store()))
 
-	a.Routes.GET("/files/:file_id/:filename", files.Show())
+	a.Routes.GET("/files/:file_id/:filename", errors.Handler(files.Show()))
 }
