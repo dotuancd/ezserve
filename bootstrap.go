@@ -20,6 +20,7 @@ func bootApp(a *App) {
 	initRoutes(a)
 	initDatabase(a)
 	migrateDatabase(a)
+	loadViews(a)
 }
 
 func initRoutes(a *App) {
@@ -66,6 +67,11 @@ func initDatabase(a *App) *App {
 func migrateDatabase(a *App) *App {
 	a.DB.AutoMigrate(&models.User{})
 	a.DB.AutoMigrate(&models.File{})
+	return a
+}
+
+func loadViews(a *App) *App {
+	a.Routes.LoadHTMLGlob("resources/views/*")
 	return a
 }
 

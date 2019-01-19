@@ -57,8 +57,8 @@ func (h *FileHandler) Store () gin.HandlerFunc {
 	return func(c *gin.Context) {
 
 		_, err := c.MultipartForm()
-		isMultipartForm = err != nil
-		isJSON := c.GetHeader("Content-Type") == "application/json"
+		//isMultipartForm := err != nil
+		//isJSON := c.GetHeader("Content-Type") == "application/json"
 
 		fh, err := c.FormFile("file")
 
