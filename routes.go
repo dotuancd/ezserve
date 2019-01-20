@@ -10,6 +10,7 @@ import (
 func registerRoutes(a *app.App) {
 	registerHomeRoutes(a)
 	registerFileRoutes(a)
+	registerAssetsRoutes(a)
 }
 
 func registerHomeRoutes(a *app.App) {
@@ -31,4 +32,9 @@ func registerFileRoutes(a *app.App) {
 	authRoutes := r.Group("/", middlewares.UserAuth(a))
 	authRoutes.GET("/api/files", errors.Handler(files.Index()))
 	authRoutes.POST("/api/files", errors.Handler(files.Store()))
+}
+
+func registerAssetsRoutes(a *app.App) {
+	a.Routes.Static("/assets/", "public")
+	a.Routes.StaticFile("/favicon.ico", "public/favicon.ico")
 }

@@ -4,6 +4,7 @@ import (
 	"crypto/sha1"
 	"fmt"
 	"github.com/dotuancd/ezserve/app/http/errors"
+	"github.com/dotuancd/ezserve/app/pagination"
 
 	"github.com/dotuancd/ezserve/app"
 	"github.com/dotuancd/ezserve/app/http/res"
@@ -41,15 +42,15 @@ func (h *FileHandler) Index() errors.HandlerFunc {
 	return func(c *gin.Context) error {
 		var files []models.File
 		user := c.MustGet("user").(models.User)
+		query := h.App.DB.Model(models.File{}).Where(models.File{UserID: user.ID})
 
-		db := h.App.DB
+		p := pagination.GetParamsContext(c).Paginate(query, &files)
 
-		db.Find(&files, models.File{UserID: user.ID})
-
-		c.JSON(200, gin.H{
-			"ok": true,
-			"files": files,
-		})
+		c.JSON(200, p)
+		//c.JSON(200, gin.H{
+		//	"ok": true,
+		//	"files": p.Items(),
+		//})
 
 		return nil
 	}
