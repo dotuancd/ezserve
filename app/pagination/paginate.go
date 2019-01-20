@@ -69,7 +69,7 @@ func (p *Params) Paginate(q *gorm.DB, rows interface{}) *Pagination {
 	pagination.LastItem = lastItem
 	pagination.PerPage = p.PerPage
 	pagination.Page = p.Page
-	pagination.TotalPage = int(math.Ceil(float64(total / int64(p.PerPage))))
+	pagination.TotalPage = int(math.Ceil(float64(total) / float64(p.PerPage)))
 
 	return pagination
 }

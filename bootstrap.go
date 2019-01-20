@@ -39,6 +39,7 @@ func loadConfig(a *App) *App {
 
 func initRoutes(a *App) {
 	a.Routes = gin.Default()
+	registerGlobalMiddleware(a)
 	registerRoutes(a)
 }
 

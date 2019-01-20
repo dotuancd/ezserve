@@ -5,7 +5,13 @@ import (
 	"github.com/dotuancd/ezserve/app/http/controllers"
 	"github.com/dotuancd/ezserve/app/http/errors"
 	"github.com/dotuancd/ezserve/app/http/middlewares"
+
+	"github.com/gin-contrib/cors"
 )
+
+func registerGlobalMiddleware(a *app.App) {
+	a.Routes.Use(cors.Default())
+}
 
 func registerRoutes(a *app.App) {
 	registerHomeRoutes(a)
