@@ -1,9 +1,9 @@
-package supports
+package str
 
 import "testing"
 
 func TestStringRand(t *testing.T) {
-	r := StringRand(10)
+	r := Rand(10)
 
 	t.Log(r)
 	if len(r) != 10 {

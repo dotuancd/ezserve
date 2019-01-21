@@ -1,6 +1,5 @@
 
 import fileRequest from '../../api/files'
-import logger from "vuex/dist/logger";
 
 const state = {
     files: {

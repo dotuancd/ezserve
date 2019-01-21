@@ -1,17 +1,9 @@
 package models
 
 import (
-	"github.com/dotuancd/ezserve/app/supports"
+	"github.com/dotuancd/ezserve/app/supports/str"
 	"github.com/spf13/viper"
 	"time"
-)
-
-const FileIdLength = 12
-
-const (
-	FileVisibilityPublic = "public"
-	FileVisibilityProtected = "protected"
-	FileVisibilityPrivate = "private"
 )
 
 type File struct {
@@ -28,22 +20,22 @@ type File struct {
 	PublicURL string `json:"public_url" gorm:"-"`
 }
 
-func (file *File) AfterFind() error {
-	return file.appendPublicURL()
+func (f *File) AfterFind() error {
+	return f.appendPublicURL()
 }
 
-func (file *File) AfterSave() error {
-	return file.appendPublicURL()
+func (f *File) AfterSave() error {
+	return f.appendPublicURL()
 }
 
-func (file *File) appendPublicURL() error {
+func (f *File) appendPublicURL() error {
 	replacements := map[string]interface{}{
-		"host": viper.GetString("app.host"),
-		"file_id": file.ID,
-		"filename": file.Name,
+		"host":     viper.GetString("app.host"),
+		"file_id":  f.ID,
+		"filename": f.Name,
 	}
 
-	file.PublicURL = supports.Replace(
+	f.PublicURL = str.Replace(
 		":host/files/:file_id/:filename",
 		replacements,
 	)

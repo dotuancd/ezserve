@@ -2,13 +2,13 @@
     <nav aria-label="Page navigation example">
         <ul class="pagination justify-content-end">
             <li class="page-item" :class="{disabled: !hasPrevious}">
-                <a class="page-link" href="#" @click="loadPage(pagination.page-1)">Previous</a>
+                <a class="page-link" :href="getLink(pagination.page - 1)" @click="loadPage(pagination.page-1)">Previous</a>
             </li>
             <li class="page-item" v-for="i in pagination.total_page" :class="{active: isCurrent(i)}">
-                <a class="page-link" href="#" @click="loadPage(i)">{{i}}</a>
+                <a class="page-link" :href="getLink(i)" @click="loadPage(i)">{{i}}</a>
             </li>
             <li class="page-item" :class="{disabled: !hasNext}">
-                <a class="page-link" @click="loadPage(pagination.page + 1)" href="#">Next</a>
+                <a class="page-link" v-bind:href="getLink(pagination.page + 1)" @click="loadPage(pagination.page + 1)">Next</a>
             </li>
         </ul>
     </nav>
@@ -29,9 +29,9 @@
         methods: {
             isCurrent(page) {
                 return (this.pagination.page === page)
-            }
+            },
         },
-        props: ["pagination", "loadPage"]
+        props: ["pagination", "loadPage", "getLink"]
     }
 </script>
 

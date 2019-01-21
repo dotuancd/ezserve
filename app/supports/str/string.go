@@ -1,4 +1,4 @@
-package supports
+package str
 
 import (
 	"github.com/spf13/cast"
@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func StringRand(n int) string {
+func Rand(n int) string {
 	const chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 	max := len(chars)
 	r := ""
