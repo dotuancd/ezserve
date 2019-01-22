@@ -1,9 +1,10 @@
 <template>
   <div id="app">
     <navigator></navigator>
+    <router-view></router-view>
     <!--<img alt="Vue logo" src="./assets/logo.png">-->
     <!--<HelloWorld msg="Welcome to Your Vue.js App"/>-->
-    <file-index></file-index>
+    <!--<file-index></file-index>-->
     <!--<login></login>-->
   </div>
 </template>
@@ -11,15 +12,15 @@
 <script>
 // import HelloWorld from './components/HelloWorld.vue'
 import Navigator from "./components/Nav";
-import Login from './components/Login'
-import FileIndex from './components/files/ListFiles'
+// import Login from './components/Login'
+// import FileIndex from './components/files/ListFiles'
 
 export default {
   name: 'app',
   components: {
     Navigator,
-    FileIndex,
-    Login,
+    // FileIndex,
+    // Login,
   }
 }
 </script>

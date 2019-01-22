@@ -12,6 +12,14 @@
                 <a class="nav-item nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
             </div>
         </div>
+        <ul class="navbar-nav">
+            <li class="nav-item mx-2">
+                <router-link class="nav-link" :to="{name: 'login'}">Sign in</router-link>
+            </li>
+            <li class="nav-item">
+                <router-link class="btn btn-outline-light" :to="'login'">Sign up</router-link>
+            </li>
+        </ul>
     </nav>
 </template>
 

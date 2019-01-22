@@ -15,5 +15,13 @@ export default {
             .then((response) => {
                 callback(response.data)
             })
+    },
+    create(file, callback) {
+
+        axios.post("http://localhost:8000/api/files?token=ebE3GB8Xsn3A5WOQ", file)
+            .then((response) => {
+                callback(response.data)
+            })
+
     }
 }

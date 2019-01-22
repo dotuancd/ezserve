@@ -1,6 +1,11 @@
 <template>
     <div class="container">
         <h1>Files</h1>
+        <div class="text-right">
+            <router-link :to="{name: 'files.create'}" class="btn btn-outline-primary">
+                Create
+            </router-link>
+        </div>
         <table class="table">
             <thead>
             <tr>

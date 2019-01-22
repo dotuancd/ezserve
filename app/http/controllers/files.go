@@ -10,6 +10,7 @@ import (
 	"github.com/dotuancd/ezserve/app/pagination"
 	. "github.com/dotuancd/ezserve/app/supports"
 	"github.com/dotuancd/ezserve/app/supports/str"
+	"io/ioutil"
 
 	"github.com/gin-gonic/gin"
 
@@ -90,7 +91,7 @@ func (h *FileHandler) Store () errors.HandlerFunc {
 		fh, err := c.FormFile("file")
 
 		if err == http.ErrMissingFile {
-			c.GetHeader("content")
+			c.PostForm("content")
 		}
 
 		if err != nil {
@@ -133,4 +134,12 @@ func (h *FileHandler) Store () errors.HandlerFunc {
 
 		return nil
 	}
+}
+
+
+func createFileFromContent(filename string, content string) (path string, err error){
+
+	ioutil.WriteFile(filename, []byte(content), 0644)
+
+	return path, nil
 }
