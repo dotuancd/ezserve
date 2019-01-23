@@ -12,7 +12,7 @@
                 <a class="nav-item nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
             </div>
         </div>
-        <ul class="navbar-nav">
+        <ul v-if="!user" class="navbar-nav">
             <li class="nav-item mx-2">
                 <router-link class="nav-link" :to="{name: 'login'}">Sign in</router-link>
             </li>
@@ -20,15 +20,22 @@
                 <router-link class="btn btn-outline-light" :to="'login'">Sign up</router-link>
             </li>
         </ul>
+        <ul v-if="user" class="navbar-nav">
+            <li class="nav-item mx-2">
+                <router-link class="nav-link">{{user.name}}</router-link>
+            </li>
+        </ul>
     </nav>
 </template>
 
 <script>
+
+    import {mapState} from 'vuex'
+
     export default {
-        name: "Nav"
+        name: "Nav",
+        computed: mapState({
+            user: stage => stage.user.user
+        })
     }
 </script>
-
-<style scoped>
-
-</style>

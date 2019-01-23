@@ -1,6 +1,17 @@
+
+import api from '../../api/user'
+
 export default {
+    namespaced: true,
     state: {
-        user: {}
+        user: null
+    },
+    actions: {
+        login({commit}, credentials) {
+            api.login(credentials , (user) => {
+                commit("login", user)
+            })
+        }
     },
     mutations: {
         login (state, user) {

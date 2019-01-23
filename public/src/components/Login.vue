@@ -1,10 +1,10 @@
 <template>
-    <form class="form-signin" @submit="login">
+    <form class="form-signin" @submit.prevent="login">
         <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
         <label for="email" class="sr-only">Email address</label>
-        <input type="email" id="email" class="form-control" placeholder="Email address" required="" autofocus="">
+        <input type="email" v-model="credentials.email" id="email" class="form-control" placeholder="Email address" required="" autofocus="">
         <label for="password" class="sr-only">Password</label>
-        <input type="password" id="password" class="form-control" placeholder="Password" required="">
+        <input type="password" v-model="credentials.password" id="password" class="form-control" placeholder="Password" required="">
         <div class="checkbox mb-3">
             <label>
                 <input type="checkbox" value="remember-me"> Remember me
@@ -18,9 +18,17 @@
 <script>
     export default {
         name: "Login",
+        data() {
+            return {
+                credentials: {
+                    email: null,
+                    password: null,
+                }
+            }
+        },
         methods: {
             login () {
-                alert("Nice try!")
+                this.$store.dispatch("user/login", this.credentials)
             }
         }
     }

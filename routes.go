@@ -15,8 +15,17 @@ func registerGlobalMiddleware(a *app.App) {
 
 func registerRoutes(a *app.App) {
 	registerHomeRoutes(a)
+	registerAuthRoutes(a)
 	registerFileRoutes(a)
 	registerAssetsRoutes(a)
+}
+
+func registerAuthRoutes(a *app.App) {
+	login := controllers.AuthController{
+		App: a,
+	}
+
+	a.Routes.POST("/api/login", errors.Handler(login.Login()))
 }
 
 func registerHomeRoutes(a *app.App) {
