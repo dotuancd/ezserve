@@ -2,11 +2,14 @@ package main
 
 import (
 	"fmt"
+	"github.com/dotuancd/ezserve/app/validation"
+	"gopkg.in/go-playground/validator.v8"
 
 	. "github.com/dotuancd/ezserve/app"
 	"github.com/dotuancd/ezserve/app/models"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
 	"github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
@@ -18,7 +21,17 @@ func bootApp(a *App) {
 	initRoutes(a)
 	initDatabase(a)
 	migrateDatabase(a)
+	registerValidators(a)
 	loadViews(a)
+}
+
+func registerValidators(a *App) *App {
+
+	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
+		_ = v.RegisterValidation("required_without", validation.RequiredWithout)
+	}
+
+	return a
 }
 
 func loadConfig(a *App) *App {

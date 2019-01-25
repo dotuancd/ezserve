@@ -24,11 +24,15 @@ func Rand(n int) string {
 // template = "User :user_id has been deleted."
 // replacements = map[string]interface = {"user_id": 12}
 // will be = "User 12 has been deleted."
-func Replace(template string, replacements map[string]interface{}) string {
+func Replacements(template string, replacements map[string]interface{}) string {
 	var noLimit = -1
 	for key, value := range replacements {
 		template = strings.Replace(template, ":" + key, cast.ToString(value), noLimit)
 	}
 
 	return template
+}
+
+func UpperFirst(s string) string {
+	return strings.ToUpper(s[:1]) + s[1:]
 }

@@ -35,7 +35,7 @@ func (f *File) appendPublicURL() error {
 		"filename": f.Name,
 	}
 
-	f.PublicURL = str.Replace(
+	f.PublicURL = str.Replacements(
 		":host/files/:file_id/:filename",
 		replacements,
 	)

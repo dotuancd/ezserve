@@ -9,7 +9,7 @@ module.exports = {
     //
     //         filename: "index.html",
     //
-    //         title: "Ez Serve"
+    //         filename: "Ez Serve"
     //     }
     // }
     // assetsDir: "public/assets"

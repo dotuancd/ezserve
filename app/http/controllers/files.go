@@ -10,7 +10,10 @@ import (
 	"github.com/dotuancd/ezserve/app/pagination"
 	. "github.com/dotuancd/ezserve/app/supports"
 	"github.com/dotuancd/ezserve/app/supports/str"
-	"io/ioutil"
+	"google.golang.org/appengine/log"
+	"io"
+	"mime/multipart"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 
@@ -36,6 +39,17 @@ var (
 
 type FileHandler struct {
 	App *app.App
+}
+
+type StoreRequest struct {
+	Filename string `json:"filename" form:"filename" binding:"required_without=File"`
+	Content string `json:"content" form:"content" binding:"required_without=File"`
+	File *multipart.FileHeader `form:"file"`
+}
+
+func (h *FileHandler) SomeAction(c *gin.Context) error  {
+
+	return nil
 }
 
 func (h *FileHandler) Index() errors.HandlerFunc {
@@ -83,28 +97,50 @@ func (h *FileHandler) Show() errors.HandlerFunc {
 
 func (h *FileHandler) Store () errors.HandlerFunc {
 	return func(c *gin.Context) error {
+		var content string
+		var filename string
 
-		_, err := c.MultipartForm()
-		//isMultipartForm := err != nil
-		//isJSON := c.GetHeader("Content-Type") == "application/json"
-
-		fh, err := c.FormFile("file")
-
-		if err == http.ErrMissingFile {
-			c.PostForm("content")
-		}
+		rq := StoreRequest{}
+		err := c.Bind(&rq)
 
 		if err != nil {
+
+			//log.Errorf(c, "An error occurred while trying bind to StoreRequest")
+			return err
+		}
+
+		//fh, err := c.FormFile("file")
+		fh := rq.File
+
+		hasFile := fh != nil
+
+		if hasFile {
+			filename = fh.Filename
+		} else {
+			filename = rq.Filename
+			content = rq.Content
+			//filename = c.PostForm("filename")
+			//content = c.PostForm("content")
+		}
+
+		hasFileOrContent := content != "" || err == nil
+		if !hasFileOrContent {
+			log.Errorf(c, "Failed while trying to get uploaded file.", err)
+
 			return ErrFileUploadIsInvalid
 		}
 
-		dest := file.GetStoragePath(fh.Filename)
+		dest := file.GetStoragePath(filename)
 
 		if err = os.MkdirAll(path.Dir(dest), 0644); err != nil {
 			return ErrCannotCreateFolder
 		}
 
-		err = c.SaveUploadedFile(fh, dest)
+		if hasFile {
+			err = c.SaveUploadedFile(fh, dest)
+		} else {
+			err = saveContentAsFile(dest, content)
+		}
 
 		if err != nil {
 			fmt.Printf("An error occur while saving uploaded file %s", err.Error())
@@ -115,11 +151,11 @@ func (h *FileHandler) Store () errors.HandlerFunc {
 		f := &models.File{
 			ID: str.Rand(file.IdLength),
 			Path: dest,
-			ContentType: mime.TypeByExtension(path.Ext(fh.Filename)),
+			ContentType: mime.TypeByExtension(path.Ext(filename)),
 			UserID: GetLoggedInUser(c).ID,
 			CreatedAt: time.Now(),
 			UpdatedAt: time.Now(),
-			Name: fh.Filename,
+			Name: filename,
 			Visibility: c.DefaultPostForm("visibility", file.VisibilityPublic),
 			Secret: c.PostForm("secret"),
 		}
@@ -136,10 +172,19 @@ func (h *FileHandler) Store () errors.HandlerFunc {
 	}
 }
 
+func saveContentAsFile(dest string, content string) error {
 
-func createFileFromContent(filename string, content string) (path string, err error){
+	w, err := os.Create(dest)
 
-	ioutil.WriteFile(filename, []byte(content), 0644)
+	if err != nil {
+		return err
+	}
 
-	return path, nil
+	defer Close(w)
+
+	r := strings.NewReader(content)
+
+	_, err = io.Copy(w, r)
+
+	return err
 }

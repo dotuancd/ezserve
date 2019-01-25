@@ -10,3 +10,14 @@ func TestStringRand(t *testing.T) {
 		t.Error("Should return string with 10 length")
 	}
 }
+
+func TestUpperFist(t *testing.T) {
+
+	s := "abc"
+
+	r := UpperFirst(s)
+
+	if r != "Abc" {
+		t.Error("abc should upper first to Abc")
+	}
+}

@@ -6,7 +6,6 @@ import (
 	"gopkg.in/go-playground/validator.v8"
 	"io"
 	"net/http"
-	"strings"
 )
 
 type Error struct {
@@ -44,7 +43,7 @@ func Handler(next HandlerFunc) gin.HandlerFunc {
 
 		validationErr, isValidationErr := err.(validator.ValidationErrors)
 		if isValidationErr {
-			formatValidationErrors(c, validationErr)
+			validationErrorToResponse(c, validationErr)
 			return
 		}
 
@@ -52,14 +51,14 @@ func Handler(next HandlerFunc) gin.HandlerFunc {
 
 		// Convert to Error in case receive an other error
 		if !ok {
-			e = convertToResponse(err)
+			e = toResponse(err)
 		}
 
 		c.JSON(e.Status, e)
 	}
 }
 
-func convertToResponse(err error) *Error {
+func toResponse(err error) *Error {
 	return New("unknown", err.Error(), 500)
 }
 
@@ -71,19 +70,11 @@ func New(code string, message string, status int) *Error {
 	return &Error{Ok: false, Code:code, Message: message, Status: status}
 }
 
-func formatValidationErrors(c *gin.Context, err validator.ValidationErrors) {
-
-	fields := map[string]interface{}{}
-
-	for _, fError := range err {
-		// fields: {email: "The email fail validation required"}
-		name := strings.ToLower(fError.Name)
-		fields[name] = fmt.Sprintf("The %s fails validation %s", name, fError.Tag)
-	}
+func validationErrorToResponse(c *gin.Context, err validator.ValidationErrors) {
 
 	status := http.StatusUnprocessableEntity
 	e := New("validation_failed", "Validation fail", status)
-	e.Fields = fields
+	e.Fields = formatValidationErrors(err)
 
 	c.JSON(status, e)
 }

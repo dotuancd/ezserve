@@ -3,7 +3,7 @@
         <form action="" class="form" @submit.prevent="save">
             <h1>New file</h1>
             <div class="form-group">
-                <input id="title" class="form-control" type="text" v-model="file.title" placeholder="filename with extension">
+                <input id="title" class="form-control" type="text" v-model="file.filename" placeholder="filename with extension">
             </div>
             <div class="form-group">
                 <textarea rows="10" id="content" class="form-control" v-model="file.content"></textarea>
@@ -26,7 +26,7 @@
         data() {
             return {
                 file: {
-                    title: "",
+                    filename: "",
                     content: ""
                 }
             }
