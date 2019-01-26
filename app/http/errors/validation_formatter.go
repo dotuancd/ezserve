@@ -1,6 +1,7 @@
 package errors
 
 import (
+	"fmt"
 	"github.com/dotuancd/ezserve/app/supports/str"
 	v "gopkg.in/go-playground/validator.v8"
 	"strings"
@@ -26,6 +27,11 @@ func formatValidationErrors(err v.ValidationErrors) map[string]interface{} {
 	for _, fError := range err {
 		// fields: {email: "The email fail validation required"}
 		name := strings.ToLower(fError.Name)
+		
+		if sField, ok := fError.Type.FieldByName(fError.Name); ok {
+			fmt.Print(sField)
+		}
+
 		var formatter validationFormatter
 
 		formatter, hasFormatter := validationFormatters[fError.Tag]

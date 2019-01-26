@@ -9,7 +9,7 @@ import (
 type File struct {
 	ID string `json:"id" gorm:"primary_key;size:30"`
 	ContentType string `json:"content_type"`
-	Path string `json:"path"`
+	Path string `json:"-"`
 	Name string `json:"name"`
 	Secret string `json:"secret"`
 	UserID uint `json:"user_id" sql:"index"`
