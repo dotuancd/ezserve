@@ -15,3 +15,32 @@ Hm, sounds like this is a CDN.
 
 Not really, I think is like a combination of Github gist + CDN.
 
+# How to run the app
+
+## Clone repo
+First step, clone the repo to inside the GOPATH folder.
+
+If you don't your GOPATH folder just run.
+
+```sh
+go env GOPATH
+
+# For almost users it on ~/go
+```
+
+## Install dependencies
+Go to the project directory
+
+```
+go mod tidy
+```
+
+## Config database
+
+Update the config on `config/config.json`
+
+## Run app
+
+```
+go run .
+```
