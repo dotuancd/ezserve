@@ -8,7 +8,7 @@ require (
 	github.com/dotuancd/ezserve v0.0.0-20190126023323-ba9f252fff10
 	github.com/erikstmartin/go-testdb v0.0.0-20160219214506-8d10e4a1bae5 // indirect
 	github.com/gin-contrib/cors v1.3.1
-	github.com/gin-gonic/gin v1.5.0
+	github.com/gin-gonic/gin v1.7.0
 	github.com/go-sql-driver/mysql v1.4.1
 	github.com/gofrs/uuid v4.0.0+incompatible // indirect
 	github.com/jinzhu/gorm v1.9.2
